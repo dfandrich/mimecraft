@@ -28,22 +28,28 @@ def parse_args():
 
     g = p.add_argument_group('attachment options')
     g.add_argument('--begin', '-b', action=BeginAction,
-            dest='parts',
+            dest=None,
             metavar='CONTENT-TYPE')
     g.add_argument('--attach', '-a', action=AttachAction,
             nargs=2,
-            dest='parts',
+            dest=None,
             metavar=('TYPE', 'FILE'))
     g.add_argument('--attach-literal', '-l',
             action=AttachLiteralAction, nargs=2,
-            dest='parts')
+            dest=None)
     g.add_argument('--quoted-printable', '--qp',
             nargs=0,
             action=QuotedPrintableAction,
-            dest='parts')
+            dest=None)
+    g.add_argument('--name', action=NameAction, dest=None)
+    g.add_argument('--id', action=IdAction, dest=None)
     g.add_argument('--end', '-e', action=EndAction, 
-            dest='parts',
+            dest=None,
             nargs=0)
+
+    p.add_argument('--debug', '-D', action='store_true')
+
+    p.set_defaults(parts=None)
 
     return p.parse_args()
 
@@ -57,7 +63,8 @@ def attach_parts(msg, parts):
                     p_subtype)
             payload.set_payload(p['content'])
         elif 'source' in p:
-            name = os.path.basename(p['source'])
+            name = p.get('name', os.path.basename(p['source']))
+            id = p.get('id', name)
 
             payload = email.mime.nonmultipart.MIMENonMultipart(
                     p_type,
@@ -68,7 +75,7 @@ def attach_parts(msg, parts):
             # assign parts a content-id (for use with the `cid:` url
             # scheme) and `inline` content-disposition.
             if msg['content-type'] == 'multipart/related':
-                payload['Content-ID'] = '<%s>' % name
+                payload['Content-ID'] = '<%s>' % id
                 payload['Content-Disposition'] = 'inline; filename="%s"' % name
 
             data = open(p['source']).read()
@@ -120,6 +127,10 @@ def main():
 
     if not '/' in opts.type:
         opts.type = 'multipart/%s' % opts.type
+
+    if opts.debug:
+        pprint.pprint(opts.parts)
+        sys.exit()
 
     msg = build_multipart(opts)
     print msg

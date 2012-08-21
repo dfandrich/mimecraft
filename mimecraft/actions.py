@@ -70,8 +70,27 @@ class QuotedPrintableAction (MIMEAction):
 
         try:
             current = namespace.acc[-1]
+            current['parts'][-1]['encoding'] = 'quoted-printable'
         except (AttributeError, IndexError):
-            raise argparse.ArgumentError(self, 'no attachment for --quoted-printable')
+            raise argparse.ArgumentError(self, 'no attachment for %s' % option_string)
 
-        current['parts'][-1]['encoding'] = 'quoted-printable'
+class NameAction (MIMEAction):
+    def __call__(self, parser, namespace, values, option_string=None):
+        super(NameAction, self).__call__(parser, namespace, values, option_string)
+
+        try:
+            current = namespace.acc[-1]
+            current['parts'][-1]['name'] = values
+        except (AttributeError, IndexError):
+            raise argparse.ArgumentError(self, 'no attachment for %s' % option_string)
+
+class IdAction (MIMEAction):
+    def __call__(self, parser, namespace, values, option_string=None):
+        super(IdAction, self).__call__(parser, namespace, values, option_string)
+
+        try:
+            current = namespace.acc[-1]
+            current['parts'][-1]['id'] = values
+        except (AttributeError, IndexError):
+            raise argparse.ArgumentError(self, 'no attachment for %s' % option_string)
 
