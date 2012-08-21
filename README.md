@@ -32,7 +32,7 @@ Usage
 License
 -------
 
-MIMECraft, a tool for generating MIME email.
+MIMECraft, a tool for generating MIME email.  
 Copyright (C) 2012 Lars Kellogg-Stedman
 
 This program is free software: you can redistribute it and/or modify
