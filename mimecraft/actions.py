@@ -4,6 +4,8 @@ import os
 import argparse
 
 class MIMEAction (argparse.Action):
+    '''This is the base class for other argparse actions.  It ensures that
+    the namespace has been initialized.'''
     def __call__(self, parser, namespace, values, option_string=None):
         if not namespace.parts:
             namespace.parts = [
@@ -13,6 +15,8 @@ class MIMEAction (argparse.Action):
             setattr(namespace, 'acc', [namespace.parts[0]])
 
 class BeginAction (MIMEAction):
+    '''Implements the --begin option.  Starts a new multipart attachment by
+    appending a dictionary to namespace.acc.'''
     def __call__(self, parser, namespace, values, option_string=None):
         super(BeginAction, self).__call__(parser, namespace, values, option_string)
 
@@ -24,6 +28,8 @@ class BeginAction (MIMEAction):
         namespace.acc.append({'type': contenttype, 'parts': []})
 
 class EndAction (MIMEAction):
+    '''Implements the --end option.  Pops the current attachment from
+    namespace.acc and appends it to namespace.parts.'''
     def __call__(self, parser, namespace, values, option_string=None):
         super(EndAction, self).__call__(parser, namespace, values, option_string)
 
