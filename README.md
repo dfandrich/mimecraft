@@ -18,6 +18,8 @@ MIMECraft makes it easy to produce a `multipart/alternative` message
 with a `text/plain` part, a `text/rtf` part, and a `multipart/related`
 sub-part containing a `text/html` document and one or more images.
 
+[smtp-cli]: http://www.logix.cz/michal/devel/smtp-cli/
+
 Synopsis
 --------
 
