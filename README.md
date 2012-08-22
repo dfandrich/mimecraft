@@ -1,33 +1,106 @@
-![MIMECraft][logo]
-
 MIMECraft
 =========
 
 MIMECraft is a tool for crafting complex MIME messages from the command line.
 
-Usage
------
+Description
+-----------
 
-    usage: mimecraft.py [-h] [--type TYPE] [--to TO_ADDR] [--from FROM_ADDR]
-                        [--subject SUBJECT] [--cc CC] [--begin CONTENT-TYPE]
-                        [--attach TYPE FILE] [--attach-literal PARTS PARTS]
-                        [--end]
+Synopsis
+--------
 
-    optional arguments:
-      -h, --help            show this help message and exit
-      --type TYPE, -c TYPE
-      --to TO_ADDR, -t TO_ADDR
-      --from FROM_ADDR, -f FROM_ADDR
-      --subject SUBJECT, -s SUBJECT
-      --cc CC
+    usage: mimecraft [-h] [--type TYPE] [--to TO_ADDR] [--from FROM_ADDR]
+                     [--subject SUBJECT] [--cc CC] [--header HEADER HEADER]
+                     [--begin CONTENT-TYPE] [--attach TYPE FILE]
+                     [--attach-literal ATTACH_LITERAL ATTACH_LITERAL]
+                     [--quoted-printable] [--name NAME] [--id ID] [--end]
+                     [--debug]
 
-    attachment options:
-      --begin CONTENT-TYPE, -b CONTENT-TYPE
-      --attach TYPE FILE, -a TYPE FILE
-      --attach-literal PARTS PARTS, -l PARTS PARTS
-      --end, -e
+Options
+-------
 
-[logo]: cid:mimecraft.png
+### Message options
+
+- `--type` *content-type*, `-c` *content-type*
+  
+    Sets the subtype of the message.  This will typically be
+    `alternative`, `mixed`, or `related`, but `chartreuse` is also
+    acceptable.
+
+- `--to` *address*, `-t` *address*
+
+    Sets the `To:` header of the message.
+
+- `--cc` *address*
+
+    Sets the `Cc:` header of the message.
+
+- `--from` *address*, `-f` *address*
+
+    Sets the `From:` header of the message.
+
+- `--subject` *subject*, `-s` *subject*
+
+    Sets the `Subject:` of the message.
+
+- `--header` *header_name* *header_value*, `-H` *header_name*
+  *header_value*
+
+    Sets an arbitrary header in the message.
+
+### Attachment options
+
+- `--attach` *content-type* *file*, `-a` *content-type* *file*
+
+    Attach a file using the specified content-type.  Non-`text/*`
+    attachments will be base64 encoded.
+
+- `--attach-literal` *content-type* *string*, `-l` *content-type* *string*
+
+    Attach a literal string of the specified content-type.  Non-`text/*`
+    attachments will be base64 encoded.
+
+- `--quoted-printable`, `--qp`
+
+    The immeditely preceding attachment will be encoded using
+    *quoted-printable* encoding.
+
+- `--name` *string*
+
+    Sets the attachment filename.  Defaults to the basename of the
+    source file.
+
+- `--id` *string*
+
+    Sets the `Content-ID` for the attachment.  If unspecified this
+    defaults to the filename.
+
+- `--begin` *subtype*, `-b` *subtype*
+
+    Begin a new `multipart/*` sub-part.
+
+- `--end`, `-e`
+
+    End a mutipart sub-part.
+
+Example
+-------
+
+To send this document as a three-part `multipart/alternative` message,
+with one `text/plain` part, one `text/x-markdown` part, and finally a
+`text/html` part and `image/png` contained in a `multipart/related`
+sub-part:
+
+    mimecraft \
+      --to lars@oddbit.com \
+      --from lars@oddbit.com \
+      --subject "MIME TEST" \
+      --attach text/plain README.txt \
+      --attach text/x-markdown README.md \
+      --begin related \
+        --attach text/html README.html \
+        --attach image/png mimecraft.png \
+      --end
 
 License
 -------
