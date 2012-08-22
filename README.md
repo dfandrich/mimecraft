@@ -1,7 +1,11 @@
 MIMECraft
 =========
 
+![MIMECraft Logo][]
+
 MIMECraft is a tool for crafting complex MIME messages from the command line.
+
+[mimecraft logo]: mimecraft.png
 
 Description
 -----------
