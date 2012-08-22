@@ -23,29 +23,41 @@ def parse_args():
             default=os.environ['LOGNAME'])
     p.add_argument('--subject', '-s')
     p.add_argument('--cc')
-    p.add_argument('--header', '-H', action='append',
-            default=[], nargs=2)
+    p.add_argument('--header', '-H',
+            action='append',
+            default=[],
+            nargs=2,
+            metavar=('HEADER_NAME', 'HEADER_VALUE'),
+            help='Set an arbitrary message header')
 
     g = p.add_argument_group('attachment options')
     g.add_argument('--begin', '-b', action=BeginAction,
             dest=None,
-            metavar='CONTENT-TYPE')
+            metavar='CONTENT-TYPE',
+            help='Begin a multipart sub-part')
     g.add_argument('--attach', '-a', action=AttachAction,
             nargs=2,
             dest=None,
-            metavar=('TYPE', 'FILE'))
+            metavar=('CONTENT-TYPE', 'FILE'),
+            help='Attach a file')
     g.add_argument('--attach-literal', '-l',
             action=AttachLiteralAction, nargs=2,
-            dest=None)
+            dest=None,
+            metavar=('CONTENT-TYPE', 'CONTENTS'),
+            help='Create an attachment with literal content')
     g.add_argument('--quoted-printable', '--qp',
             nargs=0,
             action=QuotedPrintableAction,
-            dest=None)
-    g.add_argument('--name', action=NameAction, dest=None)
-    g.add_argument('--id', action=IdAction, dest=None)
+            dest=None,
+            help='Use quoted-printable encoding on the preceding attachment')
+    g.add_argument('--name', action=NameAction, dest=None,
+            help='Set the filename of the preceding attachment')
+    g.add_argument('--id', action=IdAction, dest=None,
+            help='Set the content-id of the preceding attachment')
     g.add_argument('--end', '-e', action=EndAction, 
             dest=None,
-            nargs=0)
+            nargs=0,
+            help='Close a multipart sub-part')
 
     p.add_argument('--debug', '-D', action='store_true')
 

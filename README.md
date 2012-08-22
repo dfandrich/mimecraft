@@ -10,11 +10,11 @@ Synopsis
 --------
 
     usage: mimecraft [-h] [--type TYPE] [--to TO_ADDR] [--from FROM_ADDR]
-                     [--subject SUBJECT] [--cc CC] [--header HEADER HEADER]
-                     [--begin CONTENT-TYPE] [--attach TYPE FILE]
-                     [--attach-literal ATTACH_LITERAL ATTACH_LITERAL]
-                     [--quoted-printable] [--name NAME] [--id ID] [--end]
-                     [--debug]
+                     [--subject SUBJECT] [--cc CC]
+                     [--header HEADER_NAME HEADER_VALUE] [--begin CONTENT-TYPE]
+                     [--attach CONTENT-TYPE FILE]
+                     [--attach-literal CONTENT-TYPE CONTENTS] [--quoted-printable]
+                     [--name NAME] [--id ID] [--end] [--debug]
 
 Options
 -------
