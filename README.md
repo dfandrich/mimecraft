@@ -1,14 +1,22 @@
 MIMECraft
 =========
 
-![MIMECraft Logo][]
-
 MIMECraft is a tool for crafting complex MIME messages from the command line.
-
-[mimecraft logo]: mimecraft.png
 
 Description
 -----------
+
+<img src="https://raw.github.com/larsks/mimecraft/master/mimecraft.png" width="200" style="float: left" />
+
+There are many tools for extracting the contents of a MIME-encoded
+message, but there are comparatively few command-line tools that exist
+for *generating* such messages.  While tools like [smtp-cli][], for
+example, are quite capable, they are still limited in the structure
+they can produce.
+
+MIMECraft makes it easy to produce a `multipart/alternative` message
+with a `text/plain` part, a `text/rtf` part, and a `multipart/related`
+sub-part containing a `text/html` document and one or more images.
 
 Synopsis
 --------
