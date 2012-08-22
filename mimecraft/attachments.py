@@ -4,7 +4,7 @@ import email.message
 import email.mime.nonmultipart
 import email.mime.multipart
 
-def attach_parts(msg, parts):
+def attach_parts(parent, parts):
     for p in parts:
         p_type, p_subtype = p['type'].split('/', 1)
 
@@ -25,7 +25,7 @@ def attach_parts(msg, parts):
             # If we are building a multipart/related part,
             # assign parts a content-id (for use with the `cid:` url
             # scheme) and `inline` content-disposition.
-            if msg['content-type'] == 'multipart/related':
+            if parent['content-type'] == 'multipart/related':
                 payload['Content-ID'] = '<%s>' % id
                 payload['Content-Disposition'] = 'inline; filename="%s"' % name
 
@@ -46,7 +46,7 @@ def attach_parts(msg, parts):
                     p_subtype)
             attach_parts(payload, p['parts'])
 
-        msg.attach(payload)
+        parent.attach(payload)
 
 def build_multipart (opts):
     msg = email.message.Message()
