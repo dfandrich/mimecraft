@@ -100,7 +100,43 @@ Options
 Example
 -------
 
-To send this document as a three-part `multipart/alternative` message,
+### A simple example
+
+This command:
+
+    $ mimecraft -c alternative \
+      -l text/plain "This is a plain part" \
+      -l text/x-markdown "*This* is a **Markdown** part" \
+      -l text/html "<em>This</em> is a <strong>HTML</strong> part."
+
+Would generate the following output:
+
+    MIME-Version: 1.0
+    Content-Type: multipart/alternative;
+     boundary="===============5796968212609317359=="
+    To: lars
+    From: lars
+
+    --===============5796968212609317359==
+    Content-Type: text/plain
+    MIME-Version: 1.0
+
+    This is a plain part
+    --===============5796968212609317359==
+    Content-Type: text/x-markdown
+    MIME-Version: 1.0
+
+    *This* is a **Markdown** part
+    --===============5796968212609317359==
+    Content-Type: text/html
+    MIME-Version: 1.0
+
+    <em>This</em> is a <strong>HTML</strong> part.
+    --===============5796968212609317359==--
+
+### A more complex example
+
+To generate a three-part `multipart/alternative` message,
 with one `text/plain` part, one `text/x-markdown` part, and finally a
 `text/html` part and `image/png` contained in a `multipart/related`
 sub-part:
@@ -115,6 +151,9 @@ sub-part:
         --attach text/html README.html \
         --attach image/png mimecraft.png \
       --end
+
+Within the `text/html` part, you could link to the logo using
+`src="cid:mimecraft.png"` in your image links.
 
 License
 -------
