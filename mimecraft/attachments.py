@@ -1,8 +1,11 @@
-#!/usr/bin/python
+import base64
+import os
+import quopri
 
 import email.message
 import email.mime.nonmultipart
 import email.mime.multipart
+
 
 def attach_parts(parent, parts):
     for p in parts:
@@ -29,11 +32,12 @@ def attach_parts(parent, parts):
                 payload['Content-ID'] = '<%s>' % id
                 payload['Content-Disposition'] = 'inline; filename="%s"' % name
 
-            data = open(p['source']).read()
+            with open(p['source'], 'rb') as fd:
+                data = fd.read()
 
             # Base64 encode non-text attachments.
-            if not p_type == 'text':
-                data = base64.encodestring(data)
+            if p_type != 'text':
+                data = base64.b64encode(data)
                 payload['encoding'] = 'base64'
                 payload['Content-Transfer-Encoding'] = 'base64'
             elif p.get('encoding') == 'quoted-printable':
@@ -48,7 +52,8 @@ def attach_parts(parent, parts):
 
         parent.attach(payload)
 
-def build_multipart (opts):
+
+def build_multipart(opts):
     msg = email.message.Message()
     msg.set_type(opts.type)
 
@@ -66,7 +71,7 @@ def build_multipart (opts):
 
     if opts.cc:
         msg['Cc'] = opts.cc
-    
+
     if opts.parts:
         attach_parts(msg, opts.parts[0]['parts'])
 
